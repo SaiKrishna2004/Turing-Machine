@@ -1,0 +1,115 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+public class TuringMachine {
+private static final int INITIAL
+_
+STATE = 0;
+private static final int HALT
+_
+STATE = -1;
+private Map<StateSymbolPair, Transition> transitions = new HashMap<>();
+private String tape;
+private int tapePosition = 0;
+private int state = INITIAL
+_
+STATE;
+public TuringMachine(String initialTape) {
+this.tape = initialTape;
+}
+public void addTransition(int currentState, char currentSymbol, int
+nextState, char writeSymbol, int moveDirection) {
+transitions.put(new StateSymbolPair(currentState, currentSymbol), new
+Transition(nextState, writeSymbol, moveDirection));
+}
+public void run() {
+while (state != HALT
+_
+STATE) {
+char currentSymbol = tape.charAt(tapePosition);
+StateSymbolPair key = new StateSymbolPair(state, currentSymbol);
+if (transitions.containsKey(key)) {
+Transition transition = transitions.get(key);
+state = transition.nextState;
+// Write the new symbol to the tape
+StringBuilder tapeBuilder = new StringBuilder(tape);
+tapeBuilder.setCharAt(tapePosition, transition.writeSymbol);
+tape = tapeBuilder.toString();
+// Move the tape head
+if (transition.moveDirection == 1) {
+tapePosition++;
+} else if (transition.moveDirection == -1) {
+tapePosition--;
+}
+} else {
+// Halt if there is no transition defined
+state = HALT
+_
+STATE;
+}
+// Print the current state and tape contents
+System.out.println("State: " + state);
+System.out.println("Tape: " + tape);
+}
+}
+public static void main(String[] args) {
+Scanner scanner = new Scanner(System.in);
+System.out.print("Enter the initial tape content (e.g., 1010): ");
+String initialTape = scanner.nextLine();
+TuringMachine turingMachine = new TuringMachine(initialTape);
+System.out.println("Enter transition rules (current
+_
+state, current
+_
+next
+_
+state, write
+_
+symbol, move
+_
+direction):");
+System.out.println("Example: 0 1 1 0 1");
+symbol,
+while (true) {
+System.out.print("Enter transition rule (or 'q' to quit): ");
+String input = scanner.nextLine();
+if (input.equals("q")) {
+break;
+}
+String[] parts = input.split(" ");
+if (parts.length == 5) {
+int currentState = Integer.parseInt(parts[0]);
+char currentSymbol = parts[1].charAt(0);
+int nextState = Integer.parseInt(parts[2]);
+char writeSymbol = parts[3].charAt(0);
+int moveDirection = Integer.parseInt(parts[4]);
+turingMachine.addTransition(currentState, currentSymbol, nextState,
+writeSymbol, moveDirection);
+} else {
+in the specified format.
+");
+System.out.println("Invalid input. Please enter the transition rule
+}
+}
+turingMachine.run();
+if (state != that.state) return false;
+return symbol == that.symbol;
+}
+@Override
+public int hashCode() {
+int result = state;
+result = 31 * result + (int) symbol;
+return result;
+}
+}
+class Transition {
+int nextState;
+char writeSymbol;
+int moveDirection;
+public Transition(int nextState, char writeSymbol, int moveDirection)
+{
+this.nextState = nextState;
+this.writeSymbol = writeSymbol;
+this.moveDirection = moveDirection;
+}
+}
